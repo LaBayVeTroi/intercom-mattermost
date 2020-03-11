@@ -41,6 +41,16 @@ INSTALLED_APPS = [
     'app'
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'redis://redis:6379/0',
+    },
+}
+
+CACHE_TTL = 60 * 120
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
