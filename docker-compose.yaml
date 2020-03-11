@@ -3,10 +3,11 @@ version: "3"
 services:
   app:
     restart: always
-    build: .
+    image: my-python
+    container_name: django-server
     command: python manage.py runserver 0.0.0.0:8000
-    # volumes:
-    #   - .:./
+    volumes:
+      - ./:/src
     ports:
       - "8000:8000"
     depends_on:
