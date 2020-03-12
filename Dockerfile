@@ -1,6 +1,7 @@
-FROM python:3
+FROM python:3.6
 ENV PYTHONUNBUFFERED 1
-WORKDIR .
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
+RUN mkdir /config
+ADD /requirements.txt /config/
+RUN pip install -r /config/requirements.txt && pip install gunicorn==19.6.0
+RUN mkdir /src;
+WORKDIR /src
