@@ -14,17 +14,8 @@ MATTER_MOST_URL = 'https://mattermost-namnlnh.herokuapp.com/api/v4/'
 
 def hello_world(request):
   d = {
-    'user_id': '1231312',
-    'user_name': 'phmtuan'
+    'id': '5e675ad457327e2c702451b0'
   }
-  print(cache.set('1', d, timeout=7200))
-  print(cache.get('1'))
-  print(cache.ttl('1'))
+  print(cache.set('5e675ad457327e2c702451b0', d, timeout=7200))
+  print(cache.get('5e675ad457327e2c702451b0'))
   return HttpResponse('Hello World')
-
-@api_view(['POST'])
-def recieve_intercom_hook(request):
-  user = request.data['data']['item']['user']
-  user_id = user['id']
-  cache.set(user_id, user, timeout=TTL)
-  return Response({'data': request.data})
