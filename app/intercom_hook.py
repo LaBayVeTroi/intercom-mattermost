@@ -10,7 +10,7 @@ def recieve_intercom_hook(request):
   user_id = user['id']
   user_cache = cache.get(user_id)
   root_message_id = ''
-  if (user_cache is None) :
+  if (user_cache is None) : 
     mattermost_id = create_user(user_id)
     add_user_to_team(mattermost_id)
     add_user_to_channel(mattermost_id)
@@ -22,6 +22,6 @@ def recieve_intercom_hook(request):
   message = request.data['data']['conversation_message']['body']
   message_detail = forward_message_to_mattermost(token_mattermost,root_message_id,message)
   if(root_message_id == ''):
-    user['root_message_id'] = message_detail['root_id']
+    user['root_message_id'] = message_detail['id']
 
   return Response({'data': request.data})

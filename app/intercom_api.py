@@ -26,3 +26,5 @@ def reply_conversation(token,message):
     'Content-Type': 'application/json',
     'Authorization': 'Bearer {}'.format(token)
   }
+  res = requests.post(url=req_url,headers=req_header,json=req_data)
+  
