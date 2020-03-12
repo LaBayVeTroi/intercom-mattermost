@@ -5,6 +5,6 @@ from .views import (
 )
 
 urlpatterns = [
-  path('', hello_world, name='index'),
+  path('/hello-world', hello_world, name='index'),
   path('recieve_intercom_hook/', recieve_intercom_hook, name='recieve_intercom_hook')
 ]
