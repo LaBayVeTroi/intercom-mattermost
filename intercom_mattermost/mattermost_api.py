@@ -35,4 +35,5 @@ def login(id_logged_in):
   req_url = '{}/{}'.format(MATTER_MOST_URL, end_point)
   res = requests.post(url=req_url, json=req_data)
   res_json = res.json()
+  print(res_json)
   
