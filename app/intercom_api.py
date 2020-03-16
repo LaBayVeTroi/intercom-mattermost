@@ -25,6 +25,4 @@ def reply_conversation(conversation_id, message):
 
     res = requests.post(url=req_url, headers=req_headers, json=req_data)
 
-    print(res.json())
-
     return res.json()

@@ -25,18 +25,16 @@ def recieve_intercom_hook(request):
     add_user_to_team(mattermost_id)
     add_user_to_channel(mattermost_id)
     user['mattermost_id'] = mattermost_id
+    message = request.data['data']['item']['conversation_message']['body']
   else :
     root_message_id = user_cache['root_message_id']
+    message = request.data['data']['item']['conversation_parts']['conversation_parts'][0]['body']
   token_mattermost = login(user_id)
   user['token_mattermost'] = token_mattermost
-  message = request.data['data']['item']['conversation_message']['body']
   message_detail = forward_message_to_mattermost(token_mattermost,root_message_id,message)
   if(root_message_id == ''):
     user['root_message_id'] = message_detail['id']
-  user['conversation'] = {
-    'id': conversation_id
-  }
-  cache.set(user_id, user, timeout=CACHE_TTL)
-  print(cache.get(user_id))
-
+    user['conversation_id'] = conversation_id
+    cache.set(user_id, user, timeout=CACHE_TTL)
+ 
   return Response({'data': request.data})

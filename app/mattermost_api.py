@@ -40,7 +40,6 @@ def login(id_logged_in):
   # print(cache.get(id_logged_in))
   res_headers = res.headers
   token_mattermost = res_headers.get('Token')
-  print(token_mattermost)  
   return token_mattermost
 
 def add_user_to_team(mattermost_id):
@@ -55,7 +54,6 @@ def add_user_to_team(mattermost_id):
   }
   req_url = '{}{}'.format(MATTER_MOST_URL, end_point)
   res = requests.post(url=req_url,headers=req_headers,json=req_data)
-  print(res.json())
 
 def add_user_to_channel(mattermost_id):
   end_point= 'channels/{}/members'.format(SERVICE_CHANNEL_ID)
@@ -68,9 +66,11 @@ def add_user_to_channel(mattermost_id):
     'Authorization': 'Bearer {}'.format(TOKEN_ADMIN_MATTERMOST)
   }
   res = requests.post(url=req_url,headers=req_headers,json=req_data)
-  print(res.json())
 
 def forward_message_to_mattermost(token,root_id,message):
+  print('token : ' + token)
+  print('root_id : ' + root_id)
+  print('message : ' + message)
   end_point = 'posts'
   req_url = '{}/{}'.format(MATTER_MOST_URL,end_point)
   req_headers = {
@@ -83,7 +83,6 @@ def forward_message_to_mattermost(token,root_id,message):
     'root_id' : root_id
   }
   res = requests.post(url=req_url,headers=req_headers,json=req_data)
-  print(res.json())
   return res.json()
 
 # def get_message_detail_from_mattermost(token,message_id):
@@ -99,7 +98,6 @@ def forward_message_to_mattermost(token,root_id,message):
 
 
 def get_post_detail(post_id):
-  post_id = 'gd6wqcy5a385pfe8nnkh1pedoo'
   end_point = 'posts/{}'.format(post_id)
   req_url = '{}/{}'.format(MATTER_MOST_URL, end_point)
   req_headers = {
