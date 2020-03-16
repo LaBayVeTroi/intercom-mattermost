@@ -2,15 +2,25 @@ import requests
 import redis
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .mattermost_api import create_user, login, forward_message_to_mattermost
+from .mattermost_api import (
+  create_user,
+  login,
+  add_user_to_team,
+  add_user_to_channel,
+  forward_message_to_mattermost,
+)
+from django.core.cache import cache
+
+CACHE_TTL = 120 * 60
 
 @api_view(['POST'])
 def recieve_intercom_hook(request):
   user = request.data['data']['item']['user']
+  conversation_id = request.data['data']['item']['id']
   user_id = user['id']
   user_cache = cache.get(user_id)
   root_message_id = ''
-  if (user_cache is None) : 
+  if (user_cache is None):
     mattermost_id = create_user(user_id)
     add_user_to_team(mattermost_id)
     add_user_to_channel(mattermost_id)
@@ -19,9 +29,14 @@ def recieve_intercom_hook(request):
     root_message_id = user_cache['root_message_id']
   token_mattermost = login(user_id)
   user['token_mattermost'] = token_mattermost
-  message = request.data['data']['conversation_message']['body']
+  message = request.data['data']['item']['conversation_message']['body']
   message_detail = forward_message_to_mattermost(token_mattermost,root_message_id,message)
   if(root_message_id == ''):
     user['root_message_id'] = message_detail['id']
+  user['conversation'] = {
+    'id': conversation_id
+  }
+  cache.set(user_id, user, timeout=CACHE_TTL)
+  print(cache.get(user_id))
 
   return Response({'data': request.data})

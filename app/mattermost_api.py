@@ -11,6 +11,7 @@ SERVICE_CHANNEL_ID = '3gnypxcd5jynfrhpnisy6ysdko'
 
 
 # Create user
+
 def create_user(user_id):
   req_data = {
     'email': '{}@gmail.com'.format(user_id),
@@ -22,24 +23,28 @@ def create_user(user_id):
     'Content-Type': 'application/json',
     'Authorization': 'Bearer {}'.format(TOKEN_ADMIN_MATTERMOST)
   }
-  req_url = '{}/{}'.format(MATTER_MOST_URL, end_point)
+  req_url = '{}{}'.format(MATTER_MOST_URL, end_point)
   res = requests.post(url=req_url, headers=req_headers, json=req_data)
   res_json = res.json()
-  return res_json['id']
+  mattermost_id = res_json['id']
+  return mattermost_id
 
 def login(id_logged_in):
   req_data = {
-    'login_id': 'id_logged_in',
+    'login_id': id_logged_in,
     'password': PASSWORD_CREATE_USER
   }
   end_point = 'users/login'
   req_url = '{}/{}'.format(MATTER_MOST_URL, end_point)
   res = requests.post(url=req_url, json=req_data)
   # print(cache.get(id_logged_in))
+  res_headers = res.headers
+  token_mattermost = res_headers.get('Token')
+  print(token_mattermost)  
   return token_mattermost
 
 def add_user_to_team(mattermost_id):
-  end_point = 'teams/{}/members'.format(TEAM_ID)
+  end_point = '/teams/{}/members'.format(TEAM_ID)
   req_data = {
     'user_id': mattermost_id,
     'team_id': TEAM_ID
@@ -48,12 +53,11 @@ def add_user_to_team(mattermost_id):
     'Content-Type': 'application/json',
     'Authorization': 'Bearer {}'.format(TOKEN_ADMIN_MATTERMOST)
   }
-  req_url = '{}/{}'.format(MATTER_MOST_URL, end_point)
+  req_url = '{}{}'.format(MATTER_MOST_URL, end_point)
   res = requests.post(url=req_url,headers=req_headers,json=req_data)
   print(res.json())
-  return Response({'data': '1'})
 
-def add_user_to_channel(token,mattermost_id):
+def add_user_to_channel(mattermost_id):
   end_point= 'channels/{}/members'.format(SERVICE_CHANNEL_ID)
   req_url = '{}/{}'.format(MATTER_MOST_URL,end_point)
   req_data = {
@@ -61,7 +65,7 @@ def add_user_to_channel(token,mattermost_id):
   }
   req_headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer {}'.format(token)
+    'Authorization': 'Bearer {}'.format(TOKEN_ADMIN_MATTERMOST)
   }
   res = requests.post(url=req_url,headers=req_headers,json=req_data)
   print(res.json())
@@ -92,3 +96,26 @@ def forward_message_to_mattermost(token,root_id,message):
 #     res = requests.get(url=req_url,headers=req_headers)
 #     print(res.json())
 #     return res.json()
+
+
+def get_post_detail(post_id):
+  post_id = 'gd6wqcy5a385pfe8nnkh1pedoo'
+  end_point = 'posts/{}'.format(post_id)
+  req_url = '{}/{}'.format(MATTER_MOST_URL, end_point)
+  req_headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer {}'.format(TOKEN_ADMIN_MATTERMOST)
+  }
+  res = requests.get(url=req_url, headers=req_headers)
+  return res.json()
+
+def get_user_detail(user_id):
+  end_point = 'users/{}'.format(user_id)
+  req_url = '{}/{}'.format(MATTER_MOST_URL, end_point)
+  print(req_url)
+  req_headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer {}'.format(TOKEN_ADMIN_MATTERMOST)
+  }
+  res = requests.get(url=req_url, headers=req_headers)
+  return res.json()
