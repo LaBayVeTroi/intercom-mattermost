@@ -1,19 +1,21 @@
 import requests
+import os
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.core.cache import cache
 
-TOKEN_ADMIN_INTERCOM = 'dG9rOjI0OWE3N2Q1X2Q1MTRfNDQzM184YmUzX2U5YjAyNWY1MzcxZToxOjA='
-ADMIN_ID = '3865233'
+TOKEN_ADMIN_INTERCOM = os.environ.get('TOKEN_ADMIN_INTERCOM')
+ADMIN_ID = os.environ.get('ADMIN_ID')
 
-INTERCOM_URL = 'https://api.intercom.io'
+INTERCOM_URL = os.environ.get('INTERCOM_URL')
+
 
 def reply_conversation(conversation_id, message):
     end_point = '/conversations/{}/reply'.format(conversation_id)
-    req_url = '{}/{}'.format(INTERCOM_URL,end_point)
+    req_url = '{}/{}'.format(INTERCOM_URL, end_point)
     req_data = {
         'message_type': 'comment',
-        'type' : 'admin',
+        'type': 'admin',
         'admin_id': ADMIN_ID,
         'body': message
     }
